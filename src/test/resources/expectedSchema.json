@@ -1,0 +1,17 @@
+{
+  "veryLongString": "file",
+  "exampleInt": "int",
+  "exampleString": "string",
+  "[exampleStringArray]": "string",
+  "[exampleStringList]": "string",
+  "[exampleIntArray]": "int",
+  "[exampleIntList]": "int",
+  "nested": {
+    "exampleString": "string",
+    "[exampleIntArray]": "int"
+  },
+  "[nestedList]": {
+    "exampleString": "string",
+    "[exampleIntArray]": "int"
+  }
+}
