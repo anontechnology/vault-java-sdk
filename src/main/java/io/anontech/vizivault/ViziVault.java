@@ -199,7 +199,7 @@ public class ViziVault {
       for(Attribute attribute : entity.getChangedAttributes()) {
         pointsList.add(gson.toJsonTree(attribute));
       }
-      storageRequest.add("dataPoints", pointsList);
+      storageRequest.add("data", pointsList);
 
       postWithEncryptionKey(String.format("/users/%s/attributes", entity.getId()), storageRequest);
     }

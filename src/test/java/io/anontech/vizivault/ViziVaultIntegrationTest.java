@@ -132,11 +132,12 @@ public class ViziVaultIntegrationTest {
     User sentUser = new User("exampleUser");
     sentUser.setTags(List.of("tag2"));
 
+    Attribute attribute1 = new Attribute(attributeDef1.getName());
+    attribute1.setValue("exampleUser's first name");
+    attribute1.setTags(List.of("tag3"));
+    sentUser.addAttribute(attribute1);
+
     try {
-      Attribute attribute1 = new Attribute(attributeDef1.getName());
-      attribute1.setValue("exampleUser's first name");
-      attribute1.setTags(List.of("tag3"));
-      sentUser.addAttribute(attribute1);
       vault.save(sentUser);
 
       Attribute receivedAttribute = vault.findByUser("exampleUser").getAttribute(attributeDef1.getName());
