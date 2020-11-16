@@ -31,6 +31,8 @@ public class Attribute {
 
   private Date modifiedDate;
 
+  private boolean reportOnly;
+
   Attribute() {
     regulations = new ArrayList<>();
     tags = new ArrayList<>();
