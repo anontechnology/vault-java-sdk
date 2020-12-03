@@ -30,17 +30,10 @@ public class ViziVault {
   private OkHttpClient httpClient;
   private Gson gson;
 
-  public ViziVault() {
+  public ViziVault(URL url) {
     httpClient = new OkHttpClient();
     gson = new Gson();
-  }
-
-  /**
-   * Specifies the base URL of the ViziVault API server. All other URLs will be relative to this.
-   */
-  public ViziVault withBaseURL(URL url) {
     this.baseUrl = url;
-    return this;
   }
 
   /**
@@ -210,9 +203,8 @@ public class ViziVault {
   /**
    * Deletes all attributes of a user.
    */
-  public void purge(Entity entity) {
-    delete(String.format("/users/%s/data", entity.getId()));
-    entity.purge();
+  public void purge(String userid) {
+    delete(String.format("/users/%s/data", userid));
   }
 
   /**

@@ -35,7 +35,7 @@ public class ViziVaultIntegrationTest {
 
   @Test
   public void roundTripData() throws Exception {
-    ViziVault vault = new ViziVault().withBaseURL(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
+    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
 
     // Create two attributes
     AttributeDefinition attributeDef1 = new AttributeDefinition("TestAttribute1");
@@ -67,13 +67,13 @@ public class ViziVaultIntegrationTest {
       assertEquals(null, receivedUserAfterDeletion.getAttribute(attributeDef1.getName()));
 
     } finally {
-      vault.purge(sentUser);
+      vault.purge(sentUser.getId());
     }
   }
 
   @Test
   public void testSearch() throws Exception {
-    ViziVault vault = new ViziVault().withBaseURL(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
+    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
 
     AttributeDefinition attributeDef1 = new AttributeDefinition("TestAttribute1");
     attributeDef1.setIndexed(true);
@@ -101,14 +101,14 @@ public class ViziVaultIntegrationTest {
       assertTrue(results.stream().anyMatch(result -> result.getAttribute().equals(attributeDef1.getName()) && result.getUserId().equals(user2.getId())));
       assertTrue(results.stream().anyMatch(result -> result.getAttribute().equals(attributeDef2.getName()) && result.getUserId().equals(user2.getId())));
     } finally {
-      vault.purge(user1);
-      vault.purge(user2);
+      vault.purge(user1.getId());
+      vault.purge(user2.getId());
     }
   }
 
   @Test
   public void getAttributeByDatapointId() throws Exception {
-    ViziVault vault = new ViziVault().withBaseURL(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
+    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
 
     AttributeDefinition attributeDef = new AttributeDefinition("TestAttribute1");
     vault.storeAttributeDefinition(attributeDef);
@@ -123,7 +123,7 @@ public class ViziVaultIntegrationTest {
 
   @Test
   public void testTags() throws Exception {
-    ViziVault vault = new ViziVault().withBaseURL(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
+    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
 
     AttributeDefinition attributeDef1 = new AttributeDefinition("TestAttribute1");
     attributeDef1.setTags(List.of("tag1"));
@@ -170,14 +170,14 @@ public class ViziVaultIntegrationTest {
       assertTrue(allTags.stream().noneMatch(tag -> tag.getName().equals("tag4")));
       
     } finally {
-      vault.purge(sentUser);
+      vault.purge(sentUser.getId());
     }
 
   }
 
   @Test
   public void testRegulations() throws Exception {
-    ViziVault vault = new ViziVault().withBaseURL(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
+    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
 
     Regulation regulation = new Regulation();
     regulation.setName("Regulation Name");
@@ -206,7 +206,7 @@ public class ViziVaultIntegrationTest {
 
   @Test
   public void testAttributeDefinitions() throws Exception {
-    ViziVault vault = new ViziVault().withBaseURL(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
+    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
 
     AttributeDefinition attributeDef = new AttributeDefinition("TestAttribute1");
     attributeDef.setIndexed(true);
@@ -220,7 +220,7 @@ public class ViziVaultIntegrationTest {
 
   @Test
   public void testErrorHandling() throws Exception {
-    ViziVault vault = new ViziVault().withBaseURL(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
+    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
 
     AttributeDefinition attributeDef = new AttributeDefinition("InvalidAttribute???");
 
