@@ -3,6 +3,33 @@
   <groupId>io.anontech.vizivault</groupId>
   <artifactId>vizivault-java-client</artifactId>
   <version>1.0-SNAPSHOT</version>
+
+  <name>ViziVaut Java Client</name>
+  <description>A Java library for interfacing with AnonTech's ViziVault system</description>
+  <url>https://docs.anontech.io</url>
+
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License, version 3.0</name>
+      <url>https://www.gnu.org/licenses/lgpl-3.0.en.html</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Peter Wood</name>
+      <email>peter.wood@anontech.io</email>
+      <organization>Anon Technology</organization>
+      <organizationUrl>anontech.io</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/anontechnology/vault-java-sdk.git</connection>
+    <developerConnection>scm:git:ssh://github.com:anontechnology/vault-java-sdk.git</developerConnection>
+    <url>http://github.com/anontechnology/vault-java-sdk/tree/master</url>
+  </scm>
+
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
