@@ -38,8 +38,8 @@ ViziVault vault = new ViziVault(url)
 ```java
 // Retrieving all attributes for a newly-created user
 User user = new User("exampleUser");
-user.addAttribute(FIRST_NAME, Jane);
-vault.save(new_user);
+user.addAttribute(FIRST_NAME, "Jane");
+vault.save(user);
 
 // Adding an attribute to entity retrieved from the system
 Entity entity = vault.findByEntity("exampleClient");
