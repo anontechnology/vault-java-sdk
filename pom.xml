@@ -25,9 +25,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git://github.com/anontechnology/vault-java-sdk.git</connection>
-    <developerConnection>scm:git:ssh://github.com:anontechnology/vault-java-sdk.git</developerConnection>
-    <url>http://github.com/anontechnology/vault-java-sdk/tree/master</url>
+    <connection>scm:git:git://github.com/anontechnology/java-sdk.git</connection>
+    <developerConnection>scm:git:ssh://github.com:anontechnology/java-sdk.git</developerConnection>
+    <url>http://github.com/anontechnology/java-sdk/tree/master</url>
   </scm>
 
   <properties>
