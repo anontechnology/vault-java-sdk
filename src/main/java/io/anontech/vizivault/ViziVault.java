@@ -40,6 +40,8 @@ public class ViziVault {
 
   /**
    * Specifies the API key to use to connect to the ViziVault API server.
+   * @param apiKey the API key to use for all HTTP requests
+   * @return this
    */
   public ViziVault withApiKey(String apiKey) {
     this.apiKey = String.format("Bearer %s", apiKey);
@@ -48,6 +50,8 @@ public class ViziVault {
 
   /**
    * Specifies the encryption key that will be used to store data in the vault.
+   * @param encryptionKey the RSA public encryption key to use for storage requests
+   * @return this
    */
   public ViziVault withEncryptionKey(String encryptionKey) {
     this.encryptionKey = encryptionKey;
@@ -56,6 +60,8 @@ public class ViziVault {
 
   /**
    * Specifies the decryptioin key that will be used to store data in the vault.
+   * @param decryptionKey the RSA private decryption key to use for retrieval requests
+   * @return this
    */
   public ViziVault withDecryptionKey(String decryptionKey) {
     this.decryptionKey = decryptionKey;
@@ -147,6 +153,8 @@ public class ViziVault {
 
   /**
    * Retrieves all attributes for an entity with the specified ID, as well as entity-level metadata.
+   * @param entityId The ID of the entity to retrieve
+   * @return The entity with the specified ID
    */
   public Entity findByEntity(String entityId) {
     List<Attribute> data = gson.fromJson(getWithDecryptionKey(String.format("/entities/%s/attributes", entityId)), new TypeToken<List<Attribute>>(){}.getType());
@@ -157,6 +165,8 @@ public class ViziVault {
 
   /**
    * Retrieves all attributes for a user with the specified ID, as well as user-level metadata.
+   * @param userId The ID of the user to retrieve
+   * @return The user with the specified ID
    */
   public User findByUser(String userId) {
     List<Attribute> data = gson.fromJson(getWithDecryptionKey(String.format("/users/%s/attributes", userId)), new TypeToken<List<Attribute>>(){}.getType());
@@ -178,6 +188,7 @@ public class ViziVault {
 
   /**
    * Updates a user or entity to match changes that have been made client-side, by deleting or creating attributes in the vault as necessary.
+   * @param entity The user or entity to save
    */
   public void save(Entity entity) {
     
@@ -204,6 +215,7 @@ public class ViziVault {
 
   /**
    * Deletes all attributes of a user.
+   * @param userid The id of the user or entity to purge.
    */
   public void purge(String userid) {
     delete(String.format("/users/%s/data", userid));
@@ -211,6 +223,7 @@ public class ViziVault {
 
   /**
    * Creates or updates an attribute definition.
+   * @param attribute The updated attribute definition
    */
   public void storeAttributeDefinition(AttributeDefinition attribute) {
     post("/attributes", attribute);
@@ -218,6 +231,8 @@ public class ViziVault {
 
   /**
    * Gets an attribute definition with the specified name.
+   * @param attributeKey The name of the attribute to retrieve
+   * @return The attribute definition with the specified name
    */
   public AttributeDefinition getAttributeDefinition(String attributeKey) {
     return gson.fromJson(get(String.format("/attributes/%s", attributeKey)), AttributeDefinition.class);
@@ -225,6 +240,7 @@ public class ViziVault {
 
   /**
    * Lists all attribute definitions in the vault.
+   * @return A list containing all attribute definitions in the vault
    */
   public List<AttributeDefinition> getAttributeDefinitions() {
     return gson.fromJson(get("/attributes/"), new TypeToken<List<AttributeDefinition>>(){}.getType());
@@ -232,6 +248,7 @@ public class ViziVault {
 
   /**
    * Creates or updates a tag.
+   * @param tag The tag to store in the vault
    */
   public void storeTag(Tag tag) {
     post("/tags", tag);
@@ -239,6 +256,8 @@ public class ViziVault {
 
   /**
    * Gets a tag with the specified name.
+   * @param tag The text of the tag to retrieve
+   * @return A tag with the specified text
    */
   public Tag getTag(String tag) {
     return gson.fromJson(get(String.format("/tags/%s", tag)), Tag.class);
@@ -246,6 +265,7 @@ public class ViziVault {
 
   /**
    * Lists all tags in the vault.
+   * @return A list of all tags in the vault
    */
   public List<Tag> getTags() {
     return gson.fromJson(get("/tags/"), new TypeToken<List<Tag>>(){}.getType());
@@ -253,6 +273,8 @@ public class ViziVault {
 
   /**
    * Deletes a tag. This will remove the tag from all attributes in the vault.
+   * @param tag The text of a tag to remove
+   * @return True if a tag with the specified tag was deleted
    */
   public boolean deleteTag(String tag) {
     try {
@@ -266,6 +288,7 @@ public class ViziVault {
 
   /**
    * Creates or updates a regulation.
+   * @param regulation The regulation object to store in the vault
    */
   public void storeRegulation(Regulation regulation) {
     post("/regulations", regulation);
@@ -273,6 +296,7 @@ public class ViziVault {
 
   /**
    * Lists all regulations in the vault.
+   * @return A list of all regulations in the vault
    */
   public List<Regulation> getRegulations() {
     return gson.fromJson(get("/regulations/"), new TypeToken<List<Regulation>>(){}.getType());
@@ -280,6 +304,8 @@ public class ViziVault {
 
   /**
    * Gets a regulation with the specified key.
+   * @param key The key of the regulation to retrieve.
+   * @return A regulation with the specified key
    */
   public Regulation getRegulation(String key) {
     return gson.fromJson(get(String.format("/regulations/%s", key)), new TypeToken<Regulation>(){}.getType());
@@ -287,6 +313,8 @@ public class ViziVault {
 
   /**
    * Deletes a regulation. This will remove the regulation from all attributes in the vault.
+   * @param regulation The key of the regulation to delete
+   * @return True if a regulation with the specified key was deleted
    */
   public boolean deleteRegulation(String regulation) {
     try {
@@ -300,6 +328,10 @@ public class ViziVault {
 
   /**
    * Searches for attributes in the vault that match specified criteria. Attributes that are indexed can be searched by value.
+   * @param searchRequest The search query to execute
+   * @param page The page offset of the results to return
+   * @param count How many results should be in a page
+   * @return One page of attributes that match the query
    */
   public List<Attribute> search(SearchRequest searchRequest, int page, int count) {
     JsonObject paginatedSearchRequest = new JsonObject();
@@ -311,6 +343,8 @@ public class ViziVault {
 
   /**
    * Gets an attribute with the specified datapoint ID.
+   * @param dataPointId The datapoint ID of the attribute to retrieve
+   * @return A single attribute with the specified datapoint ID
    */
   public Attribute getDataPoint(String dataPointId) {
     return gson.fromJson(getWithDecryptionKey(String.format("/data/%s", dataPointId)), Attribute.class);
