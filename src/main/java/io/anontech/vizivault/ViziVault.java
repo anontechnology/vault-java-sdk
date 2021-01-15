@@ -181,7 +181,7 @@ public class ViziVault {
    * @param attribute The attribute to retrieve
    * @return A list of matching attributes
    */
-  public User getUserAttribute(String userId, String attribute) {
+  public List<Attribute> getUserAttribute(String userId, String attribute) {
     return gson.fromJson(getWithDecryptionKey(String.format("/users/%s/attributes/%s", userId, attribute)), new TypeToken<List<Attribute>>(){}.getType());
   }
 
