@@ -175,6 +175,16 @@ public class ViziVault {
     return user;
   }
 
+  /**
+   * Retrieves all values of the specified attribute that the user with the specified ID has.
+   * @param userId The ID of the user to retrieve
+   * @param attribute The attribute to retrieve
+   * @return A list of matching attributes
+   */
+  public User getUserAttribute(String userId, String attribute) {
+    return gson.fromJson(getWithDecryptionKey(String.format("/users/%s/attributes/%s", userId, attribute)), new TypeToken<List<Attribute>>(){}.getType());
+  }
+
   @Data
   private static class EntityDefinitionDTO {
     private String id;
