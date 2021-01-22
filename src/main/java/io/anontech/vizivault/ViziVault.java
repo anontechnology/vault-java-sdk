@@ -144,10 +144,12 @@ public class ViziVault {
   }
 
   private JsonElement getWithDecryptionKey(String url) {
+    if(decryptionKey == null) throw new MissingKeyException("Cannot read data from the vault, as no decryption key was provided");
     return get(url, new Headers.Builder().add("X-Decryption-Key", decryptionKey).build());
   }
 
   private JsonElement postWithEncryptionKey(String url, Object body) {
+    if(encryptionKey == null) throw new MissingKeyException("Cannot write data to the vault, as no encryption key was provided");
     return post(url, body, new Headers.Builder().add("X-Encryption-Key", encryptionKey).build());
   }
 
