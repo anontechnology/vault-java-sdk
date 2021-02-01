@@ -10,6 +10,14 @@ Please report bugs and issues to support@anontech.io
 ### Requirements
 
 ### Installaion
+To add the ViziVault Java client to a Maven project, add the following to your pom.xml file:
+```xml
+    <dependency>
+      <groupId>io.anontech.vizivault</groupId>
+      <artifactId>vizivault-java-client</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+```
 
 ### Authentication
 You must provide an application identifier or api key for all operations, to identify you and your application to the vault for authenticaion. For data insertion, a valid encryption key is necessary. For data retrieval, a valid decryption key is necessary.
