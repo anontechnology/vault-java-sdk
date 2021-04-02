@@ -259,6 +259,14 @@ public class ViziVault {
   }
 
   /**
+   * Deletes an attribute definition with the specified key.
+   * @param attributeKey The key of the attribute to delete
+   */
+  public void deleteAttributeDefinition(String attributeKey) {
+    delete(String.format("/attributes/%s", attributeKey));
+  }
+
+  /**
    * Creates or updates a tag.
    * @param tag The tag to store in the vault
    */
