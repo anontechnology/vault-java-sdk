@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.anontech.vizivault</groupId>
   <artifactId>vizivault-java-client</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.2</version>
 
   <name>ViziVaut Java Client</name>
   <description>A Java library for interfacing with AnonTech's ViziVault system</description>

@@ -48,10 +48,6 @@ public class Entity {
     this.id = id;
   }
 
-  void purge() {
-    attributes.clear();
-  }
-
   Set<Attribute> getChangedAttributes() {
     return changedAttributes;
   }

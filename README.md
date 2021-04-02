@@ -41,50 +41,65 @@ ViziVault vault = new ViziVault(url)
 
 [Attributes](https://docs.anontech.io/glossary/datapoint/) are how the ViziVault ecosystem organizes your data. Every attribute consists of three main components: a user id, which represents who the data is about; a value, which is some piece of information about the user; and an attribute name, which expresses the relationship between the user and the value. For example, in an online retail application, there would be an attribute for shipping addresses, an attribute for billing addresses, and an attribute for credit card information.
 
-#### Adding an Attribute to an Entity or User
+#### Adding an Attribute to an entity or User
 
 ```java
-// Retrieving all attributes for a newly-created user
+// Adding an attribute to a newly-created user
 User user = new User("exampleUser");
 user.addAttribute(FIRST_NAME, "Jane");
-vault.save(user);
-
-// Adding an attribute to entity retrieved from the system
-Entity entity = vault.findByEntity("exampleClient");
-entity.addAttribute("FULL_ADDRESS", "1 Hacker Way, Beverly Hills, CA 90210");
-vault.save(entity);
-```
-
-
-
-### Retrieving all Attributes of an Entity or User
-Retrieves all [Attributes](https://docs.anontech.io/glossary/datapoint/) for the specified entity or user. Returns a list of attribute objects.
-
-```java
-// Adding an attribute to user
-User user = vault.findByUser("User1234");
-user.addAttribute("FIRST_NAME", "Jane");
 vault.save(user);
 
 // Adding an attribute to entity
 Entity entity = vault.findByEntity("Client6789");
 entity.addAttribute("FULL_ADDRESS", "1 Hacker Way, Beverly Hills, CA 90210");
 vault.save(entity);
+
+// Adding an attribute with additional metadata to a user
+Attribute attribute = new Attribute("LAST_NAME");
+attribute.setTags(List.of("ExampleTag"));
+attribute.setValue("Smith");
+user.addAttribute(attribute);
+vault.save(user);
+```
+
+### Retrieving attributes of an entity or User
+[Attributes](https://docs.anontech.io/glossary/datapoint/) belonging to an entity or user can be inspected in various ways.
+
+```java
+// Retrieving all attributes for a user
+User user = vault.findByUser("User1234");
+List<Attribute> attributes = user.getAttributes();
+
+// Retrieving all attributes for an entity
+Entity entity = vault.findByEntity("Client6789");
+List<Attribute> attributes = entity.getAttributes();
+
+// Retrieving specific attribute for a user
+User user = vault.findByUser("User1234");
+Attribute attribute = user.getAttribute("FIRST_NAME");
+
+// Retrieving specific attribute for an entity
+Entity entity = vault.findByEntity("Client6789");
+Attribute attribute = entity.getAttribute("FULL_ADDRESS");
+
+// Retrieving multiple values for a repeatable attribute
+List<Attribute> attributes = user.getAttributes("SHIPPING_ADDRESS");
 ```
 
 ### Searching
 
-To search a vault for [Attributes](https://docs.anontech.io/glossary/datapoint/) , pass in a SearchRequest. A list of matching Attributes will be returned. For more information, read about [ViziVault Search](https://docs.anontech.io/tutorials/search/).
+To search a vault for [attributes](https://docs.anontech.io/glossary/datapoint/) , pass in a SearchRequest. A list of matching attributes will be returned. For more information, read about [ViziVault Search](https://docs.anontech.io/tutorials/search/).
 
 ```java
-List<Attribute> attributes = vault.search(new SearchRequest("LAST_NAME", "Doe"));
+int pageIndex = 0;
+int maxCount = 25;
+List<Attribute> attributes = vault.search(new SearchRequest("LAST_NAME", "Doe"), pageIndex, maxCount);
 ```
 
-### Deleting User Attributes
+### Deleting user attributes
 ```java
 // Purging all user attributes
-User user = vault.findByUser("User1234");
-vault.purge(user.getId());
+vault.purge("User1234");
 
 // Removing specific attribute
 User user = vault.findByUser("User1234");
@@ -92,13 +107,13 @@ user.clearAttribute("LAST_NAME");
 vault.save(user);
 ```
 
-### Attribute Definitions
+### Attribute definitions
 
-[Attribute definitions](https://docs.anontech.io/glossary/attribute/) define an object that contains all relevant metadata for attributes with a given `key`. This is how tags and regulations become associated with attributes. Attributes can contain a schema to further break down the structure of their value. Display names and hints can also be added to the Attribute Definition for ease of use and readability.
+[Attribute definitions](https://docs.anontech.io/glossary/attribute/) define an object that contains all relevant metadata for attributes with a given `key`. This is how tags and regulations become associated with attributes. Attributes can contain a schema to further break down the structure of their value. Display names and hints can also be added to the attribute definition for ease of use and readability.
 
-#### Storing an Attribute Definition in the Vault
+#### Storing an attribute definition in the Vault
 
-To store an Attribute Definition, create an AttributeDefinition object and save it to the Vault. The following code details the various properties of the AttributeDefinition object.
+To store an attribute definition, create an AttributeDefinition object and save it to the Vault. The following code details the various properties of the AttributeDefinition object.
 
 ```java
 AttributeDefinition attributeDef = new AttributeDefinition();
@@ -116,22 +131,24 @@ attributeDef.setIndexed(false);
 vault.storeAttributeDefinition(attributeDef);
 ```
 
+### Retrieving attribute definitions from the vault
+
 ### Tags
 
-Similar to [Regulations](https://docs.anontech.io/glossary/regulation/) , [Tags](https://docs.anontech.io/api/tags/) are user-defined strings that can be applied to Attributes to aid in classification and searching.
+Similar to [regulations](https://docs.anontech.io/glossary/regulation/) , [tags](https://docs.anontech.io/api/tags/) are user-defined strings that can be applied to attributes to aid in classification and searching.
 
 
-#### Storing a Tag in the vault
+#### Storing a tag in the vault
 
-To store a new [Tag](https://docs.anontech.io/api/tags/) , create a Tag object and save it to the Vault.
+To store a new [tag](https://docs.anontech.io/api/tags/) , create a tag object and save it to the Vault.
 
 ```java
 vault.storeTag(new Tag("Financial Data"));
 ```
 
-#### Retrieving Tags from the Vault
+#### Retrieving tags from the vault
 
-[Tags](https://docs.anontech.io/api/tags/) can be retrieved as a list of Tag objects or as a single Tag if the specific Tag is specified.
+[Tags](https://docs.anontech.io/api/tags/) can be retrieved as a list of tag objects or as a single tag.
 
 ```java
 // Retrieving all tags
@@ -141,9 +158,9 @@ List<Tag> tags = vault.getTags();
 Tag tag = vault.getTag("Financial Data");
 ```
 
-#### Deleting Tags from the Vault
+#### Deleting tags from the Vault
 
-To remove a [Tag](https://docs.anontech.io/api/tags/) , specify the Tag to be removed. A boolean denoting the status of the operation will be returned.
+To remove a [tag](https://docs.anontech.io/api/tags/), specify the tag to be removed. A boolean denoting the status of the operation will be returned.
 
 ```java
 // Removing a specific tag
@@ -154,9 +171,9 @@ boolean removed = vault.deleteTag("Financial Data");
 
 A regulation object represents a governmental regulation that impacts how you can use the data in your vault. Each data point can have a number of regulations associated with it, which makes it easier to ensure your use of the data is compliant. You can tag data points with regulations when entering them into the system, or specify rules that the system will use to automatically tag regulations for you.
 
-#### Storing a Regulation in the Vault
+#### Storing a regulation in the Vault
 
-To store a [Regulation](https://docs.anontech.io/glossary/regulation/) to the Vault, create a new Regulation object and save it to the Vault. The constructor takes the key, name, and url of the Regulation.
+To store a [Regulation](https://docs.anontech.io/glossary/regulation/) to the vault, create a new Regulation object and save it to the Vault. The constructor takes the key, name, and url of the regulation.
 
 
 ```java
@@ -171,7 +188,7 @@ vault.storeRegulation(regulation);
 
 #### Retrieving Regulations from the Vault
 
-[Regulations](https://docs.anontech.io/glossary/regulation/) can be retrieved as a list of Regulation objects or as a single Regulation if the specific Regulation is specified.
+[Regulations](https://docs.anontech.io/glossary/regulation/) can be retrieved as a list of Regulation objects or by requesting a single regulation by its key.
 
 ```java
 // Retrieving all regulations
@@ -183,7 +200,7 @@ Regulation regulation = vault.getRegulation("GDPR");
 
 #### Deleting Regulations from the Vault
 
-To remove a [Regulation](https://docs.anontech.io/glossary/regulation/) , specify the Regulation to be removed. A boolean denoting the status of the operation will be returned.
+To remove a [Regulation](https://docs.anontech.io/glossary/regulation/), specify the key of the regulation to be removed. A boolean denoting the status of the operation will be returned.
 
 ```java
 // Removing a specific regulation
