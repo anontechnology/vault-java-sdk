@@ -41,7 +41,7 @@ ViziVault vault = new ViziVault(url)
 
 The ViziVault ecosystem organizes your data using the concept of [attributes](https://docs.anontech.io/glossary/attribute/). Every data point consists of three main components: a user id, which represents who the data is about; a value, which is some piece of information about the user; and an attribute, which expresses the relationship between the user and the value. For example, in an online retail application, there would be an attribute for shipping addresses, an attribute for billing addresses, an attribute for credit card information, and so on.
 
-### Adding an Attribute to an entity or User
+### Adding an attribute to an entity or user
 
 Attributes are stored as `key`/`value` pairs of strings. Both users and entities can have attributes added to them. Some attributes are repeatable, such that multiple values can be stored for the same user; others are not repeatable, such that adding a new value to a user will overwrite any previous values. You can control whether an attribute is repeatable by modifying the associated [attribute definition](/glossary/attribute-definition).
 
@@ -64,7 +64,7 @@ user.addAttribute(attribute);
 vault.save(user);
 ```
 
-### Retrieving attributes of an entity or User
+### Retrieving attributes of an entity or user
 
 Once a User or Entity object has been retrieved from the vault, it is possible to inspect some or all of its attributes.
 
@@ -153,7 +153,7 @@ vault.storeTag(new Tag("Financial Data"));
 
 ### Retrieving tags from the vault
 
-[Tags](https://docs.anontech.io/api/tags/) can be retrieved as a list of tag objects or as a single tag.
+Tags can be retrieved as a list of tag objects or as a single tag.
 
 ```java
 // Retrieving all tags
@@ -163,9 +163,9 @@ List<Tag> tags = vault.getTags();
 Tag tag = vault.getTag("Financial Data");
 ```
 
-### Deleting tags from the Vault
+### Deleting tags from the vault
 
-To remove a [tag](https://docs.anontech.io/api/tags/), specify the tag to be removed. A boolean denoting the status of the operation will be returned.
+To remove a tag, specify the tag to be removed. A boolean denoting the status of the operation will be returned.
 
 ```java
 // Removing a specific tag
@@ -176,7 +176,7 @@ boolean removed = vault.deleteTag("Financial Data");
 
 A [regulation](https://docs.anontech.io/glossary/regulation/) object represents a governmental regulation that impacts how you can use the data in your vault. Each data point can have a number of regulations associated with it, which makes it easier to ensure your use of the data is compliant. You can tag data points with regulations when entering them into the system, or specify rules that the system will use to automatically tag regulations for you.
 
-### Storing a regulation in the Vault
+### Storing a regulation in the vault
 
 To store a regulation to the vault, create a Regulation object, set its key and its display name along with a URL pointing to further information about it, and call `storeRegulation`. To automatically apply regulations to incoming data, [rules](https://docs.anontech.io/tutorials/regulation-rules) can be specified.
 
@@ -191,7 +191,7 @@ regulation.setRule(new UserRule("GEOGRAPHIC_REGION", UserRule.UserValuePredicate
 vault.storeRegulation(regulation);
 ```
 
-### Retrieving Regulations from the Vault
+### Retrieving regulations from the vault
 
 Regulations can be retrieved as a list of Regulation objects or by requesting a single regulation by its key.
 
@@ -203,7 +203,7 @@ List<Regulation> regulations = vault.getRegulations();
 Regulation regulation = vault.getRegulation("GDPR");
 ```
 
-### Deleting Regulations from the Vault
+### Deleting regulations from the vault
 
 To remove a regulation, specify the key of the regulation to be removed. A boolean denoting the status of the operation will be returned.
 
