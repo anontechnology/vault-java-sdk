@@ -23,7 +23,7 @@ import okhttp3.Response;
 public class ViziVault {
 
   private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-  
+
   private URL baseUrl;
   private String apiKey;
   private String encryptionKey;
@@ -59,7 +59,7 @@ public class ViziVault {
   }
 
   /**
-   * Specifies the decryptioin key that will be used to store data in the vault.
+   * Specifies the decryption key that will be used to store data in the vault.
    * @param decryptionKey the RSA private decryption key to use for retrieval requests
    * @return this
    */
@@ -79,7 +79,7 @@ public class ViziVault {
           ).execute();
 
       JsonObject responseData = gson.fromJson(response.body().string(), JsonElement.class).getAsJsonObject();
-      
+
       if(! response.isSuccessful()){
         throw new VaultResponseException(responseData.get("message").getAsString(), response.code());
       }
@@ -111,7 +111,7 @@ public class ViziVault {
       throw new VaultCommunicationException(e);
     }
   }
-  
+
   private JsonElement delete(String url) {
     try {
       Response response = httpClient.newCall(
@@ -123,7 +123,7 @@ public class ViziVault {
           ).execute();
 
       JsonElement responseData = gson.fromJson(response.body().string(), JsonElement.class);
-  
+
       if(! response.isSuccessful()){
         String errorMessage = responseData == null ? "No message provided" : responseData.getAsJsonObject().get("message").getAsString();
         throw new VaultResponseException(errorMessage, response.code());
@@ -203,7 +203,7 @@ public class ViziVault {
    * @param entity The user or entity to save
    */
   public void save(Entity entity) {
-    
+
     for(String attribute : entity.getDeletedAttributes()) {
       delete(String.format("/users/%s/attributes/%s", entity.getId(), attribute));
     }
