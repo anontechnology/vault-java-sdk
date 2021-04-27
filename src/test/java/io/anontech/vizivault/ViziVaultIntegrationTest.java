@@ -21,13 +21,19 @@ public class ViziVaultIntegrationTest {
 
   private static String encryptionKey;
   private static String decryptionKey;
+  private static String apiKey;
 
   @BeforeAll
   public static void setup() throws Exception{
+    FileInputStream apiKeyFile = new FileInputStream(new File("src" + File.separator + "test" + File.separator + "resources" + File.separator + "apiKey.txt"));
+    apiKey = new String( apiKeyFile.readAllBytes() );
+    apiKeyFile.close();
+
+
     FileInputStream decKeyFile = new FileInputStream(new File("src" + File.separator + "test" + File.separator + "resources" + File.separator + "decryptionKey.txt"));
     decryptionKey = new String(decKeyFile.readAllBytes());
     decKeyFile.close();
-    
+
     FileInputStream encKeyFile = new FileInputStream(new File("src" + File.separator + "test" + File.separator + "resources" + File.separator + "encryptionKey.txt"));
     encryptionKey = new String(encKeyFile.readAllBytes());
     encKeyFile.close();
@@ -43,7 +49,7 @@ public class ViziVaultIntegrationTest {
     attributeDef2.setRepeatable(true);
     vault.storeAttributeDefinition(attributeDef1);
     vault.storeAttributeDefinition(attributeDef2);
-    
+
     // Add values of both attributes
     User sentUser = new User("exampleUser");
     try {
@@ -62,7 +68,7 @@ public class ViziVaultIntegrationTest {
       // Remove one attribute
       receivedUser.clearAttribute(attributeDef1.getName());
       vault.save(receivedUser);
-      
+
       User receivedUserAfterDeletion = vault.findByUser("exampleUser");
       assertEquals(null, receivedUserAfterDeletion.getAttribute(attributeDef1.getName()));
 
@@ -138,6 +144,7 @@ public class ViziVaultIntegrationTest {
     sentUser.addAttribute(attribute1);
 
     try {
+
       vault.save(sentUser);
 
       Attribute receivedAttribute = vault.findByUser("exampleUser").getAttribute(attributeDef1.getName());
@@ -168,7 +175,7 @@ public class ViziVaultIntegrationTest {
       assertTrue(allTags.stream().noneMatch(tag -> tag.getName().equals("tag2")));
       assertTrue(allTags.stream().noneMatch(tag -> tag.getName().equals("tag3")));
       assertTrue(allTags.stream().noneMatch(tag -> tag.getName().equals("tag4")));
-      
+
     } finally {
       vault.purge(sentUser.getId());
     }
@@ -196,11 +203,11 @@ public class ViziVaultIntegrationTest {
     Regulation receivedRegulation = vault.getRegulation(regulation.getKey());
 
     assertEquals(regulation.getName(), receivedRegulation.getName());
-    
+
     assertTrue(vault.getRegulations().stream().anyMatch(r -> r.getName().equals(regulation.getName())));
 
     vault.deleteRegulation(regulation.getKey());
-    
+
     assertTrue(vault.getRegulations().stream().noneMatch(r -> r.getName().equals(regulation.getName())));
   }
 

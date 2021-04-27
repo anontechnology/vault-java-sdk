@@ -1,7 +1,11 @@
 package io.anontech.vizivault.schema;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.Locale;
+
 public enum PrimitiveSchema {
-  STRING("string"), INTEGER("int"), BOOLEAN("boolean"), FILE("file"), FLOAT("float"), DATE("date");
+  @SerializedName("string")STRING("string"), @SerializedName("integer")INTEGER("int"), @SerializedName("boolean")BOOLEAN("boolean"), @SerializedName("file")FILE("file"), @SerializedName("float")FLOAT("float"), @SerializedName("date")DATE("date");
 
   public final String string;
 
@@ -13,4 +17,7 @@ public enum PrimitiveSchema {
   public String toString() {
     return string;
   }
+
+
+
 }
