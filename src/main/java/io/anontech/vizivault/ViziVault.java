@@ -369,4 +369,12 @@ public class ViziVault {
   public Attribute getDataPoint(String dataPointId) {
     return gson.fromJson(getWithDecryptionKey(String.format("/data/%s", dataPointId)), Attribute.class);
   }
+
+  /**
+   * Deletes an attribute with the specified datapoint ID.
+   * @param dataPointId The datapoint ID of the attribute to delete
+   */
+  public void deleteDataPoint(String dataPointId) {
+    delete(String.format("/data/%s", dataPointId));
+  }
 }
