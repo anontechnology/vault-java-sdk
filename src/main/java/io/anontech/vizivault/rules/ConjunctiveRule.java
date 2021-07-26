@@ -1,4 +1,4 @@
-package io.anontech.vizivault.tagging;
+package io.anontech.vizivault.rules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,14 +8,14 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ConjunctiveRule extends RegulationRule {
-  private List<RegulationRule> constraints;
+public class ConjunctiveRule extends RuleConstraint {
+  private List<RuleConstraint> constraints;
   public ConjunctiveRule(){
     super("all");
     constraints = new ArrayList<>();
   }
 
-  public void addRule(RegulationRule rule) {
+  public void addRule(RuleConstraint rule) {
     constraints.add(rule);
   }
 }

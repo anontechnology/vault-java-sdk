@@ -1,4 +1,4 @@
-package io.anontech.vizivault.tagging;
+package io.anontech.vizivault.rules;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class UserRule extends RegulationRule {
+public class UserRule extends RuleConstraint {
   public static enum UserValuePredicate {
     @SerializedName("eq")
     EQUALS,

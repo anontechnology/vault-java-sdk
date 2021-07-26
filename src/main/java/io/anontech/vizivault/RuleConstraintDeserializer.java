@@ -9,12 +9,12 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import io.anontech.vizivault.tagging.*;
+import io.anontech.vizivault.rules.*;
 
-class RegulationRuleDeserializer implements JsonDeserializer<RegulationRule>, JsonSerializer<RegulationRule> {
+class RuleConstraintDeserializer implements JsonDeserializer<RuleConstraint>, JsonSerializer<RuleConstraint> {
 
   @Override
-  public RegulationRule deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+  public RuleConstraint deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     String ruleType = json.getAsJsonObject().get("type").getAsString();
 
     switch (ruleType) {
@@ -34,7 +34,7 @@ class RegulationRuleDeserializer implements JsonDeserializer<RegulationRule>, Js
   }
 
   @Override
-  public JsonElement serialize(RegulationRule src, Type typeOfSrc, JsonSerializationContext context) {
+  public JsonElement serialize(RuleConstraint src, Type typeOfSrc, JsonSerializationContext context) {
     return context.serialize(src, src.getClass());
   }
   

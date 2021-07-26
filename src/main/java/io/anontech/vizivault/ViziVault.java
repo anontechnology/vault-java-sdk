@@ -11,7 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import io.anontech.vizivault.tagging.RegulationRule;
+import io.anontech.vizivault.rules.RuleConstraint;
 import lombok.Data;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -34,7 +34,7 @@ public class ViziVault {
 
   public ViziVault(URL url) {
     httpClient = new OkHttpClient();
-    gson = new GsonBuilder().registerTypeAdapter(RegulationRule.class, new RegulationRuleDeserializer()).create();
+    gson = new GsonBuilder().registerTypeAdapter(RuleConstraint.class, new RuleConstraintDeserializer()).create();
     this.baseUrl = url;
   }
 

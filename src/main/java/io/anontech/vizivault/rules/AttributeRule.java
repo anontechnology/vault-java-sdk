@@ -1,4 +1,4 @@
-package io.anontech.vizivault.tagging;
+package io.anontech.vizivault.rules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class AttributeRule extends RegulationRule {
+public class AttributeRule extends RuleConstraint {
 
   public static enum AttributeListOperator {
     @SerializedName("any")
