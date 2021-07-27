@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class UserRule extends RuleConstraint {
+public class UserConstraint extends RuleConstraint {
   public static enum UserValuePredicate {
     @SerializedName("eq")
     EQUALS,
@@ -34,11 +34,11 @@ public class UserRule extends RuleConstraint {
     AFTER;
   }
 
-  public UserRule(){
+  public UserConstraint(){
     super("user");
   }
 
-  public UserRule(String attribute, UserValuePredicate predicate, String value) {
+  public UserConstraint(String attribute, UserValuePredicate predicate, String value) {
     super("user");
     this.attribute = attribute;
     this.value = value;

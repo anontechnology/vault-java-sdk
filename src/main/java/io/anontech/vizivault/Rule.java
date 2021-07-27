@@ -2,6 +2,7 @@ package io.anontech.vizivault;
 
 import java.util.Date;
 
+import io.anontech.vizivault.rules.RuleAction;
 import io.anontech.vizivault.rules.RuleConstraint;
 import lombok.Data;
 

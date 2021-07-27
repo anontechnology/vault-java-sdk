@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class TagRule extends RuleConstraint {
+public class TagConstraint extends RuleConstraint {
 
   public static enum TagListOperator {
     @SerializedName("any")
@@ -25,12 +25,12 @@ public class TagRule extends RuleConstraint {
 
   private TagListOperator operator;
   private List<String> tags;
-  public TagRule(){
+  public TagConstraint(){
     super("tag");
     tags = new ArrayList<>();
   }
   
-  public TagRule(List<String> tags, TagListOperator operator) {
+  public TagConstraint(List<String> tags, TagListOperator operator) {
     super("tag");
     this.tags = tags;
     this.operator = operator;
