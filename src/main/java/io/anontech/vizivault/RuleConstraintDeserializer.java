@@ -19,15 +19,19 @@ class RuleConstraintDeserializer implements JsonDeserializer<RuleConstraint>, Js
 
     switch (ruleType) {
       case "all":
-        return context.deserialize(json, ConjunctiveRule.class);
+        return context.deserialize(json, ConjunctiveConstraint.class);
       case "any":
-        return context.deserialize(json, DisjunctiveRule.class);
+        return context.deserialize(json, DisjunctiveConstraint.class);
       case "tag":
         return context.deserialize(json, TagRule.class);
       case "attribute":
-        return context.deserialize(json, AttributeRule.class);
+        return context.deserialize(json, AttributeConstraint.class);
       case "user":
         return context.deserialize(json, UserRule.class);
+      case "regulation":
+        return context.deserialize(json, RegulationConstraint.class);
+      case "geo":
+        return context.deserialize(json, GeolocationConstraint.class);
       default:
         throw new JsonParseException(String.format("Unknown rule type %s", ruleType));
     }

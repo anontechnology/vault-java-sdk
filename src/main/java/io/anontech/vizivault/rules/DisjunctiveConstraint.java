@@ -8,9 +8,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DisjunctiveRule extends RuleConstraint {
+public class DisjunctiveConstraint extends RuleConstraint {
   private List<RuleConstraint> constraints;
-  public DisjunctiveRule(){
+  public DisjunctiveConstraint(){
     super("any");
     constraints = new ArrayList<>();
   }

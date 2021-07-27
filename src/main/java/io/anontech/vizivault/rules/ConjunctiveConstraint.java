@@ -8,9 +8,9 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ConjunctiveRule extends RuleConstraint {
+public class ConjunctiveConstraint extends RuleConstraint {
   private List<RuleConstraint> constraints;
-  public ConjunctiveRule(){
+  public ConjunctiveConstraint(){
     super("all");
     constraints = new ArrayList<>();
   }

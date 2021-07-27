@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class AttributeRule extends RuleConstraint {
+public class AttributeConstraint extends RuleConstraint {
 
   public static enum AttributeListOperator {
     @SerializedName("any")
@@ -22,12 +22,12 @@ public class AttributeRule extends RuleConstraint {
 
   private AttributeListOperator operator;
   private List<String> attributes;
-  public AttributeRule(){
+  public AttributeConstraint(){
     super("attribute");
     attributes = new ArrayList<>();
   }
 
-  public AttributeRule(List<String> attributes, AttributeListOperator operator) {
+  public AttributeConstraint(List<String> attributes, AttributeListOperator operator) {
     super("attribute");
     this.attributes = attributes;
     this.operator = operator;

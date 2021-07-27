@@ -347,6 +347,46 @@ public class ViziVault {
   }
 
   /**
+   * Creates or updates a rule.
+   * @param rule The rule object to store in the vault
+   */
+  public void storeRule(Rule rule) {
+    post("/rules", rule);
+  }
+
+  /**
+   * Lists all rules in the vault.
+   * @return A list of all rules in the vault
+   */
+  public List<Regulation> getRules() {
+    return gson.fromJson(get("/rules/"), new TypeToken<List<Rule>>(){}.getType());
+  }
+
+  /**
+   * Gets a rule with the specified name.
+   * @param name The name of the rule to retrieve.
+   * @return A rule with the specified name
+   */
+  public Rule getRule(String name) {
+    return gson.fromJson(get(String.format("/rules/%s", name)), new TypeToken<Rule>(){}.getType());
+  }
+
+  /**
+   * Deletes a rule.
+   * @param rule The name of the rule to delete
+   * @return True if a rule with the specified name was deleted
+   */
+  public boolean deleteRule(String rule) {
+    try {
+      delete(String.format("/rules/%s", rule));
+      return true;
+    } catch(VaultResponseException e) {
+      // Throwing and then immediately catching an exception is kind of hacky - might want to make the api return boolean instead
+      return false;
+    }
+  }
+
+  /**
    * Searches for attributes in the vault that match specified criteria. Attributes that are indexed can be searched by value.
    * @param searchRequest The search query to execute
    * @param page The page offset of the results to return
