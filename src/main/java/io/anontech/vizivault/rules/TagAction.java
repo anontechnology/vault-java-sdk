@@ -11,4 +11,9 @@ public class TagAction extends RuleAction {
   public TagAction() {
     super("tag");
   }
+
+  public TagAction(String tag) {
+    this();
+    this.tag = tag;
+  }
 }

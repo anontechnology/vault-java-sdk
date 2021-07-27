@@ -12,4 +12,9 @@ public class AlertAction extends RuleAction {
   public AlertAction() {
     super("alert");
   }
+
+  public AlertAction(String message, AlertLevel alertLevel) {
+    this.message = message;
+    this.alertLevel = alertLevel;
+  }
 }

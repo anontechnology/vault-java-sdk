@@ -13,9 +13,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import io.anontech.vizivault.tagging.*;
-import io.anontech.vizivault.tagging.AttributeRule.AttributeListOperator;
-import io.anontech.vizivault.tagging.UserRule.UserValuePredicate;
+import io.anontech.vizivault.rules.*;
+import io.anontech.vizivault.rules.AttributeConstraint.AttributeListOperator;
+import io.anontech.vizivault.rules.UserConstraint.UserValuePredicate;
 
 public class ViziVaultIntegrationTest {
 
@@ -186,11 +186,14 @@ public class ViziVaultIntegrationTest {
     AttributeDefinition attributeDef = new AttributeDefinition("TestAttribute1");
     vault.storeAttributeDefinition(attributeDef);
 
-    ConjunctiveRule rootRule = new ConjunctiveRule();
-    rootRule.addRule(new AttributeRule(List.of(attributeDef.getName()), AttributeListOperator.ANY));
-    rootRule.addRule(new UserRule(attributeDef.getName(), UserValuePredicate.EQUALS, "Test Attribute Value"));
+    ConjunctiveConstraint rootRule = new ConjunctiveConstraint();
+    rootRule.addRule(new AttributeConstraint(List.of(attributeDef.getName()), AttributeListOperator.ANY));
+    rootRule.addRule(new UserConstraint(attributeDef.getName(), UserValuePredicate.EQUALS, "Test Attribute Value"));
 
-    regulation.setRule(rootRule);
+    Rule rule = new Rule();
+    rule.setConstraint(rootRule);
+    rule.setAction(new RegulationAction(regulation.getKey()));
+
     vault.storeRegulation(regulation);
 
     Regulation receivedRegulation = vault.getRegulation(regulation.getKey());

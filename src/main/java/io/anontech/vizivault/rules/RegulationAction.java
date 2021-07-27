@@ -11,4 +11,9 @@ public class RegulationAction extends RuleAction {
   public RegulationAction() {
     super("regulation");
   }
+
+  public RegulationAction(String regulation) {
+    this();
+    this.regulation = regulation;
+  }
 }

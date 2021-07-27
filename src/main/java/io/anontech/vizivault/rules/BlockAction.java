@@ -10,4 +10,9 @@ public class BlockAction extends RuleAction {
   public BlockAction() {
     super("block");
   }
+
+  public BlockAction(String message) {
+    this();
+    this.message = message;
+  }
 }
