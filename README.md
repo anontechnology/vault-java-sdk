@@ -39,49 +39,45 @@ ViziVault vault = new ViziVault(url)
 
 ## Attributes
 
-The ViziVault ecosystem organizes your data using the concept of [attributes](https://docs.anontech.io/glossary/attribute/). Every data point consists of three main components: a user id, which represents who the data is about; a value, which is some piece of information about the user; and an attribute, which expresses the relationship between the user and the value. For example, in an online retail application, there would be an attribute for shipping addresses, an attribute for billing addresses, an attribute for credit card information, and so on.
+The ViziVault ecosystem organizes your data using the concept of [attributes](https://docs.anontech.io/glossary/attribute/). Every data point consists of three main components: a data subject id, which represents who the data is about; a value, which is some piece of information about the data subject; and an attribute, which expresses the relationship between the data subject and the value. For example, in an online retail application, there would be an attribute for shipping addresses, an attribute for billing addresses, an attribute for credit card information, and so on.
 
-### Adding an attribute to an entity or user
+### Adding an attribute to a data subject
 
-Attributes are stored as `key`/`value` pairs of strings. Both users and entities can have attributes added to them. Some attributes are repeatable, such that multiple values can be stored for the same user; others are not repeatable, such that adding a new value to a user will overwrite any previous values. You can control whether an attribute is repeatable by modifying the associated [attribute definition](/glossary/attribute-definition).
+Attributes are stored as `key`/`value` pairs of strings. Some attributes are repeatable, such that multiple values can be stored for the same data subject; others are not repeatable, such that adding a new value to a data subject will overwrite any previous values. You can control whether an attribute is repeatable by modifying the associated [attribute definition](/glossary/attribute-definition).
 
 ```java
-// Adding an attribute to a newly-created user
-User user = new User("exampleUser");
-user.addAttribute(FIRST_NAME, "Jane");
-vault.save(user);
+// Adding an attribute to a newly-created data subject
+DataSubject subject = new DataSubject("exampleUser");
+subject.addAttribute(FIRST_NAME, "Jane");
+vault.save(subject);
 
-// Adding an attribute to an entity retrieved from the vault
-Entity entity = vault.findByEntity("Client6789");
-entity.addAttribute("FULL_ADDRESS", "1 Hacker Way, Beverly Hills, CA 90210");
-vault.save(entity);
+// Adding an attribute to a data subject retrieved from the vault
+DataSubject subject = vault.findByDataSubject("Client6789");
+subject.addAttribute("FULL_ADDRESS", "1 Hacker Way, Beverly Hills, CA 90210");
+vault.save(subject);
 
-// Adding an attribute with additional metadata to a user
+// Adding an attribute with additional metadata to a data subject
 Attribute attribute = new Attribute("LAST_NAME");
 attribute.setTags(List.of("ExampleTag"));
 attribute.setValue("Smith");
-user.addAttribute(attribute);
-vault.save(user);
+subject.addAttribute(attribute);
+vault.save(subject);
 ```
 
-### Retrieving attributes of an entity or user
+### Retrieving attributes of a data subject
 
-Once a User or Entity object has been retrieved from the vault, it is possible to inspect some or all of its attributes.
+Once a data subject object has been retrieved from the vault, it is possible to inspect some or all of its attributes.
 
 ```java
-// Retrieving all attributes for a user
-User user = vault.findByUser("User1234");
-List<Attribute> userAttributes = user.getAttributes();
+// Retrieving all attributes for a data subject
+DataSubject subject = vault.findByDataSubject("User1234");
+List<Attribute> subjectAttributes = subject.getAttributes();
 
-// Retrieving all attributes for an entity
-Entity entity = vault.findByEntity("Client6789");
-List<Attribute> entityAttributes = entity.getAttributes();
-
-// Retrieving a specific non-repeatable attribute for a user
-Attribute attribute = user.getAttribute("FIRST_NAME");
+// Retrieving a specific non-repeatable attribute for a data subject
+Attribute attribute = subject.getAttribute("FIRST_NAME");
 
 // Retrieving multiple values for a repeatable attribute
-List<Attribute> attributes = user.getAttributes("SHIPPING_ADDRESS");
+List<Attribute> attributes = subject.getAttributes("SHIPPING_ADDRESS");
 ```
 
 ### Searching
@@ -94,15 +90,15 @@ int maxCount = 25;
 List<Attribute> attributes = vault.search(new SearchRequest("LAST_NAME", "Doe"), pageIndex, maxCount);
 ```
 
-### Deleting user attributes
+### Deleting data subject attributes
 ```java
-// Purging all user attributes
+// Purging all data subject attributes
 vault.purge("User1234");
 
 // Removing specific attribute
-User user = vault.findByUser("User1234");
-user.clearAttribute("LAST_NAME");
-vault.save(user);
+DataSubject subject = vault.findByDataSubject("User1234");
+subject.clearAttribute("LAST_NAME");
+vault.save(subject);
 ```
 
 ## Attribute definitions
@@ -187,7 +183,7 @@ Regulation regulation = new Regulation();
 regulation.setKey("GDPR");
 regulation.setName("General Data Protection Regulation");
 regulation.setUrl("https://gdpr.eu/");
-regulation.setRule(new UserRule("GEOGRAPHIC_REGION", UserRule.UserValuePredicate.EQUALS, "EU"));
+regulation.setRule(new SubjectValueRule("GEOGRAPHIC_REGION", SubjectValueRule.SubjectValuePredicate.EQUALS, "EU"));
 vault.storeRegulation(regulation);
 ```
 
