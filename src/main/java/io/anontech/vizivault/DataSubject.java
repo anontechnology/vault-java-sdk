@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Entity {
+public class DataSubject {
 
   private Map<String, Attribute> attributes;
   private Map<String, List<Attribute>> repeatedAttributes;
@@ -35,7 +35,7 @@ public class Entity {
   @Getter
   private Date updated;
 
-  Entity() {
+  DataSubject() {
     changedAttributes = new HashSet<>();
     attributes = new HashMap<>();
     repeatedAttributes = new HashMap<>();
@@ -43,7 +43,7 @@ public class Entity {
     tags = new ArrayList<>();
   }
 
-  public Entity(String id) {
+  public DataSubject(String id) {
     this();
     this.id = id;
   }

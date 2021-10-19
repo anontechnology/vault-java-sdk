@@ -1,4 +1,4 @@
-package io.anontech.vizivault.tagging;
+package io.anontech.vizivault.rules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class TagRule extends RegulationRule {
+public class TagConstraint extends RuleConstraint {
 
   public static enum TagListOperator {
     @SerializedName("any")
@@ -25,12 +25,12 @@ public class TagRule extends RegulationRule {
 
   private TagListOperator operator;
   private List<String> tags;
-  public TagRule(){
+  public TagConstraint(){
     super("tag");
     tags = new ArrayList<>();
   }
   
-  public TagRule(List<String> tags, TagListOperator operator) {
+  public TagConstraint(List<String> tags, TagListOperator operator) {
     super("tag");
     this.tags = tags;
     this.operator = operator;

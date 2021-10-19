@@ -11,7 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
-import io.anontech.vizivault.tagging.RegulationRule;
+import io.anontech.vizivault.rules.RuleConstraint;
 import lombok.Data;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -34,7 +34,7 @@ public class ViziVault {
 
   public ViziVault(URL url) {
     httpClient = new OkHttpClient();
-    gson = new GsonBuilder().registerTypeAdapter(RegulationRule.class, new RegulationRuleDeserializer()).create();
+    gson = new GsonBuilder().registerTypeAdapter(RuleConstraint.class, new RuleConstraintDeserializer()).create();
     this.baseUrl = url;
   }
 
@@ -154,37 +154,25 @@ public class ViziVault {
   }
 
   /**
-   * Retrieves all attributes for an entity with the specified ID, as well as entity-level metadata.
-   * @param entityId The ID of the entity to retrieve
-   * @return The entity with the specified ID
+   * Retrieves all attributes for a data subject with the specified ID, as well as data-subject-level metadata.
+   * @param subjectId The ID of the data subject to retrieve
+   * @return The data subject with the specified ID
    */
-  public Entity findByEntity(String entityId) {
-    List<Attribute> data = gson.fromJson(getWithDecryptionKey(String.format("/entities/%s/attributes", entityId)), new TypeToken<List<Attribute>>(){}.getType());
-    Entity entity = gson.fromJson(get(String.format("/entities/%s", entityId)), Entity.class);
-    for(Attribute attr : data) entity.addAttributeWithoutPendingChange(attr);
-    return entity;
+  public DataSubject findByDataSubject(String subjectId) {
+    List<Attribute> data = gson.fromJson(getWithDecryptionKey(String.format("/datasubjects/%s/attributes", subjectId)), new TypeToken<List<Attribute>>(){}.getType());
+    DataSubject subject = gson.fromJson(get(String.format("/datasubjects/%s", subjectId)), DataSubject.class);
+    for(Attribute attr : data) subject.addAttributeWithoutPendingChange(attr);
+    return subject;
   }
 
   /**
-   * Retrieves all attributes for a user with the specified ID, as well as user-level metadata.
-   * @param userId The ID of the user to retrieve
-   * @return The user with the specified ID
-   */
-  public User findByUser(String userId) {
-    List<Attribute> data = gson.fromJson(getWithDecryptionKey(String.format("/users/%s/attributes", userId)), new TypeToken<List<Attribute>>(){}.getType());
-    User user = gson.fromJson(get(String.format("/users/%s", userId)), User.class);
-    for(Attribute attr : data) user.addAttributeWithoutPendingChange(attr);
-    return user;
-  }
-
-  /**
-   * Retrieves all values of the specified attribute that the user with the specified ID has.
-   * @param userId The ID of the user to retrieve
+   * Retrieves all values of the specified attribute that the data subject with the specified ID has.
+   * @param subjectId The ID of the data subject to retrieve
    * @param attribute The attribute to retrieve
    * @return A list of matching attributes
    */
-  public List<Attribute> getUserAttribute(String userId, String attribute) {
-    return gson.fromJson(getWithDecryptionKey(String.format("/users/%s/attributes/%s", userId, attribute)), new TypeToken<List<Attribute>>(){}.getType());
+  public List<Attribute> getDataSubjectAttribute(String subjectId, String attribute) {
+    return gson.fromJson(getWithDecryptionKey(String.format("/datasubjects/%s/attributes/%s", subjectId, attribute)), new TypeToken<List<Attribute>>(){}.getType());
   }
 
   @Data
@@ -192,24 +180,24 @@ public class ViziVault {
     private String id;
     private List<String> tags;
 
-    EntityDefinitionDTO(Entity entity) {
+    EntityDefinitionDTO(DataSubject entity) {
       this.id = entity.getId();
       this.tags = entity.getTags();
     }
   }
 
   /**
-   * Updates a user or entity to match changes that have been made client-side, by deleting or creating attributes in the vault as necessary.
-   * @param entity The user or entity to save
+   * Updates a data subject to match changes that have been made client-side, by deleting or creating attributes in the vault as necessary.
+   * @param entity The data subject to save
    */
-  public void save(Entity entity) {
-
+  public void save(DataSubject entity) {
+    
     for(String attribute : entity.getDeletedAttributes()) {
-      delete(String.format("/users/%s/attributes/%s", entity.getId(), attribute));
+      delete(String.format("/datasubjects/%s/attributes/%s", entity.getId(), attribute));
     }
     entity.getDeletedAttributes().clear();
 
-    post(entity instanceof User ? "/users" : "/entities", new EntityDefinitionDTO(entity));
+    post("/datasubjects", new EntityDefinitionDTO(entity));
 
     if(!entity.getChangedAttributes().isEmpty()) {
       JsonObject storageRequest = new JsonObject();
@@ -219,18 +207,18 @@ public class ViziVault {
       }
       storageRequest.add("data", pointsList);
 
-      postWithEncryptionKey(String.format("/users/%s/attributes", entity.getId()), storageRequest);
+      postWithEncryptionKey(String.format("/datasubjects/%s/attributes", entity.getId()), storageRequest);
     }
     entity.getChangedAttributes().clear();
 
   }
 
   /**
-   * Deletes all attributes of a user.
-   * @param userid The id of the user or entity to purge.
+   * Deletes all attributes of a data subject.
+   * @param subjectId The id of the data subject to purge.
    */
-  public void purge(String userid) {
-    delete(String.format("/users/%s/data", userid));
+  public void purge(String subjectId) {
+    delete(String.format("/datasubjects/%s/data", subjectId));
   }
 
   /**
@@ -347,6 +335,46 @@ public class ViziVault {
   }
 
   /**
+   * Creates or updates a rule.
+   * @param rule The rule object to store in the vault
+   */
+  public void storeRule(Rule rule) {
+    post("/rules", rule);
+  }
+
+  /**
+   * Lists all rules in the vault.
+   * @return A list of all rules in the vault
+   */
+  public List<Regulation> getRules() {
+    return gson.fromJson(get("/rules/"), new TypeToken<List<Rule>>(){}.getType());
+  }
+
+  /**
+   * Gets a rule with the specified name.
+   * @param name The name of the rule to retrieve.
+   * @return A rule with the specified name
+   */
+  public Rule getRule(String name) {
+    return gson.fromJson(get(String.format("/rules/%s", name)), new TypeToken<Rule>(){}.getType());
+  }
+
+  /**
+   * Deletes a rule.
+   * @param rule The name of the rule to delete
+   * @return True if a rule with the specified name was deleted
+   */
+  public boolean deleteRule(String rule) {
+    try {
+      delete(String.format("/rules/%s", rule));
+      return true;
+    } catch(VaultResponseException e) {
+      // Throwing and then immediately catching an exception is kind of hacky - might want to make the api return boolean instead
+      return false;
+    }
+  }
+
+  /**
    * Searches for attributes in the vault that match specified criteria. Attributes that are indexed can be searched by value.
    * @param searchRequest The search query to execute
    * @param page The page offset of the results to return
@@ -368,5 +396,13 @@ public class ViziVault {
    */
   public Attribute getDataPoint(String dataPointId) {
     return gson.fromJson(getWithDecryptionKey(String.format("/data/%s", dataPointId)), Attribute.class);
+  }
+
+  /**
+   * Deletes an attribute with the specified datapoint ID.
+   * @param dataPointId The datapoint ID of the attribute to delete
+   */
+  public void deleteDataPoint(String dataPointId) {
+    delete(String.format("/data/%s", dataPointId));
   }
 }

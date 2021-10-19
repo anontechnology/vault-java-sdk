@@ -39,49 +39,45 @@ ViziVault vault = new ViziVault(url)
 
 ## Attributes
 
-The ViziVault ecosystem organizes your data using the concept of [attributes](https://docs.anontech.io/glossary/attribute/). Every data point consists of three main components: a user id, which represents who the data is about; a value, which is some piece of information about the user; and an attribute, which expresses the relationship between the user and the value. For example, in an online retail application, there would be an attribute for shipping addresses, an attribute for billing addresses, an attribute for credit card information, and so on.
+The ViziVault ecosystem organizes your data using the concept of [attributes](https://docs.anontech.io/glossary/attribute/). Every data point consists of three main components: a data subject id, which represents who the data is about; a value, which is some piece of information about the data subject; and an attribute, which expresses the relationship between the data subject and the value. For example, in an online retail application, there would be an attribute for shipping addresses, an attribute for billing addresses, an attribute for credit card information, and so on.
 
-### Adding an Attribute to an entity or User
+### Adding an attribute to a data subject
 
-Attributes are stored as `key`/`value` pairs of strings. Both users and entities can have attributes added to them. Some attributes are repeatable, such that multiple values can be stored for the same user; others are not repeatable, such that adding a new value to a user will overwrite any previous values. You can control whether an attribute is repeatable by modifying the associated [attribute definition](/glossary/attribute-definition).
+Attributes are stored as `key`/`value` pairs of strings. Some attributes are repeatable, such that multiple values can be stored for the same data subject; others are not repeatable, such that adding a new value to a data subject will overwrite any previous values. You can control whether an attribute is repeatable by modifying the associated [attribute definition](/glossary/attribute-definition).
 
 ```java
-// Adding an attribute to a newly-created user
-User user = new User("exampleUser");
-user.addAttribute(FIRST_NAME, "Jane");
-vault.save(user);
+// Adding an attribute to a newly-created data subject
+DataSubject subject = new DataSubject("exampleUser");
+subject.addAttribute(FIRST_NAME, "Jane");
+vault.save(subject);
 
-// Adding an attribute to an entity retrieved from the vault
-Entity entity = vault.findByEntity("Client6789");
-entity.addAttribute("FULL_ADDRESS", "1 Hacker Way, Beverly Hills, CA 90210");
-vault.save(entity);
+// Adding an attribute to a data subject retrieved from the vault
+DataSubject subject = vault.findByDataSubject("Client6789");
+subject.addAttribute("FULL_ADDRESS", "1 Hacker Way, Beverly Hills, CA 90210");
+vault.save(subject);
 
-// Adding an attribute with additional metadata to a user
+// Adding an attribute with additional metadata to a data subject
 Attribute attribute = new Attribute("LAST_NAME");
 attribute.setTags(List.of("ExampleTag"));
 attribute.setValue("Smith");
-user.addAttribute(attribute);
-vault.save(user);
+subject.addAttribute(attribute);
+vault.save(subject);
 ```
 
-### Retrieving attributes of an entity or User
+### Retrieving attributes of a data subject
 
-Once a User or Entity object has been retrieved from the vault, it is possible to inspect some or all of its attributes.
+Once a data subject object has been retrieved from the vault, it is possible to inspect some or all of its attributes.
 
 ```java
-// Retrieving all attributes for a user
-User user = vault.findByUser("User1234");
-List<Attribute> userAttributes = user.getAttributes();
+// Retrieving all attributes for a data subject
+DataSubject subject = vault.findByDataSubject("User1234");
+List<Attribute> subjectAttributes = subject.getAttributes();
 
-// Retrieving all attributes for an entity
-Entity entity = vault.findByEntity("Client6789");
-List<Attribute> entityAttributes = entity.getAttributes();
-
-// Retrieving a specific non-repeatable attribute for a user
-Attribute attribute = user.getAttribute("FIRST_NAME");
+// Retrieving a specific non-repeatable attribute for a data subject
+Attribute attribute = subject.getAttribute("FIRST_NAME");
 
 // Retrieving multiple values for a repeatable attribute
-List<Attribute> attributes = user.getAttributes("SHIPPING_ADDRESS");
+List<Attribute> attributes = subject.getAttributes("SHIPPING_ADDRESS");
 ```
 
 ### Searching
@@ -94,15 +90,15 @@ int maxCount = 25;
 List<Attribute> attributes = vault.search(new SearchRequest("LAST_NAME", "Doe"), pageIndex, maxCount);
 ```
 
-### Deleting user attributes
+### Deleting data subject attributes
 ```java
-// Purging all user attributes
+// Purging all data subject attributes
 vault.purge("User1234");
 
 // Removing specific attribute
-User user = vault.findByUser("User1234");
-user.clearAttribute("LAST_NAME");
-vault.save(user);
+DataSubject subject = vault.findByDataSubject("User1234");
+subject.clearAttribute("LAST_NAME");
+vault.save(subject);
 ```
 
 ## Attribute definitions
@@ -153,7 +149,7 @@ vault.storeTag(new Tag("Financial Data"));
 
 ### Retrieving tags from the vault
 
-[Tags](https://docs.anontech.io/api/tags/) can be retrieved as a list of tag objects or as a single tag.
+Tags can be retrieved as a list of tag objects or as a single tag.
 
 ```java
 // Retrieving all tags
@@ -163,9 +159,9 @@ List<Tag> tags = vault.getTags();
 Tag tag = vault.getTag("Financial Data");
 ```
 
-### Deleting tags from the Vault
+### Deleting tags from the vault
 
-To remove a [tag](https://docs.anontech.io/api/tags/), specify the tag to be removed. A boolean denoting the status of the operation will be returned.
+To remove a tag, specify the tag to be removed. A boolean denoting the status of the operation will be returned.
 
 ```java
 // Removing a specific tag
@@ -176,7 +172,7 @@ boolean removed = vault.deleteTag("Financial Data");
 
 A [regulation](https://docs.anontech.io/glossary/regulation/) object represents a governmental regulation that impacts how you can use the data in your vault. Each data point can have a number of regulations associated with it, which makes it easier to ensure your use of the data is compliant. You can tag data points with regulations when entering them into the system, or specify rules that the system will use to automatically tag regulations for you.
 
-### Storing a regulation in the Vault
+### Storing a regulation in the vault
 
 To store a regulation to the vault, create a Regulation object, set its key and its display name along with a URL pointing to further information about it, and call `storeRegulation`. To automatically apply regulations to incoming data, [rules](https://docs.anontech.io/tutorials/regulation-rules) can be specified.
 
@@ -187,11 +183,11 @@ Regulation regulation = new Regulation();
 regulation.setKey("GDPR");
 regulation.setName("General Data Protection Regulation");
 regulation.setUrl("https://gdpr.eu/");
-regulation.setRule(new UserRule("GEOGRAPHIC_REGION", UserRule.UserValuePredicate.EQUALS, "EU"));
+regulation.setRule(new SubjectValueRule("GEOGRAPHIC_REGION", SubjectValueRule.SubjectValuePredicate.EQUALS, "EU"));
 vault.storeRegulation(regulation);
 ```
 
-### Retrieving Regulations from the Vault
+### Retrieving regulations from the vault
 
 Regulations can be retrieved as a list of Regulation objects or by requesting a single regulation by its key.
 
@@ -203,7 +199,7 @@ List<Regulation> regulations = vault.getRegulations();
 Regulation regulation = vault.getRegulation("GDPR");
 ```
 
-### Deleting Regulations from the Vault
+### Deleting regulations from the vault
 
 To remove a regulation, specify the key of the regulation to be removed. A boolean denoting the status of the operation will be returned.
 
