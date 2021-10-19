@@ -41,7 +41,7 @@ public class ViziVaultIntegrationTest {
 
   @Test
   public void roundTripData() throws Exception {
-    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey("aaa").withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
+    ViziVault vault = new ViziVault(new URL("http://localhost:8083")).withApiKey(apiKey).withDecryptionKey(decryptionKey).withEncryptionKey(encryptionKey);
 
     // Create two attributes
     AttributeDefinition attributeDef1 = new AttributeDefinition("TestAttribute1");
