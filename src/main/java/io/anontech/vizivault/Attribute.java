@@ -15,7 +15,7 @@ public class Attribute {
   
   private String dataPointId;
 
-  private String userId;
+  private String subjectId;
 
   private String attribute;
 

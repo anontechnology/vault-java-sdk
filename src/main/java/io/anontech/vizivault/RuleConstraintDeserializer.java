@@ -26,8 +26,8 @@ class RuleConstraintDeserializer implements JsonDeserializer<RuleConstraint>, Js
         return context.deserialize(json, TagConstraint.class);
       case "attribute":
         return context.deserialize(json, AttributeConstraint.class);
-      case "user":
-        return context.deserialize(json, UserConstraint.class);
+      case "subject":
+        return context.deserialize(json, SubjectValueConstraint.class);
       case "regulation":
         return context.deserialize(json, RegulationConstraint.class);
       case "geo":

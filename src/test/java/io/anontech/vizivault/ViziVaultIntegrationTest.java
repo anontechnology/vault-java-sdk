@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import io.anontech.vizivault.rules.*;
 import io.anontech.vizivault.rules.AttributeConstraint.AttributeListOperator;
-import io.anontech.vizivault.rules.UserConstraint.UserValuePredicate;
+import io.anontech.vizivault.rules.SubjectValueConstraint.SubjectValuePredicate;
 
 public class ViziVaultIntegrationTest {
 
@@ -45,29 +45,29 @@ public class ViziVaultIntegrationTest {
     vault.storeAttributeDefinition(attributeDef2);
     
     // Add values of both attributes
-    User sentUser = new User("exampleUser");
+    DataSubject sentSubject = new DataSubject("exampleUser");
     try {
       Attribute attribute1 = new Attribute(attributeDef1.getName());
       attribute1.setValue("exampleUser's first name");
-      sentUser.addAttribute(attribute1);
-      sentUser.addAttribute(attributeDef2.getName(), "exampleUser's last name");
-      sentUser.addAttribute(attributeDef2.getName(), "exampleUser's other last name");
-      vault.save(sentUser);
+      sentSubject.addAttribute(attribute1);
+      sentSubject.addAttribute(attributeDef2.getName(), "exampleUser's last name");
+      sentSubject.addAttribute(attributeDef2.getName(), "exampleUser's other last name");
+      vault.save(sentSubject);
 
-      User receivedUser = vault.findByUser("exampleUser");
-      assertEquals(attribute1.getValueAs(String.class), receivedUser.getAttribute(attributeDef1.getName()).getValue());
-      assertEquals(3, receivedUser.getAttributes().size());
-      assertEquals(2, receivedUser.getAttributes(attributeDef2.getName()).size());
+      DataSubject receivedSubject = vault.findByDataSubject("exampleUser");
+      assertEquals(attribute1.getValueAs(String.class), receivedSubject.getAttribute(attributeDef1.getName()).getValue());
+      assertEquals(3, receivedSubject.getAttributes().size());
+      assertEquals(2, receivedSubject.getAttributes(attributeDef2.getName()).size());
 
       // Remove one attribute
-      receivedUser.clearAttribute(attributeDef1.getName());
-      vault.save(receivedUser);
+      receivedSubject.clearAttribute(attributeDef1.getName());
+      vault.save(receivedSubject);
       
-      User receivedUserAfterDeletion = vault.findByUser("exampleUser");
-      assertEquals(null, receivedUserAfterDeletion.getAttribute(attributeDef1.getName()));
+      DataSubject receivedSubjectAfterDeletion = vault.findByDataSubject("exampleUser");
+      assertEquals(null, receivedSubjectAfterDeletion.getAttribute(attributeDef1.getName()));
 
     } finally {
-      vault.purge(sentUser.getId());
+      vault.purge(sentSubject.getId());
     }
   }
 
@@ -81,14 +81,14 @@ public class ViziVaultIntegrationTest {
     vault.storeAttributeDefinition(attributeDef1);
     vault.storeAttributeDefinition(attributeDef2);
 
-    User user1 = new User("user1");
-    user1.addAttribute(attributeDef1.getName(), "common first name");
-    vault.save(user1);
+    DataSubject subject1 = new DataSubject("subject1");
+    subject1.addAttribute(attributeDef1.getName(), "common first name");
+    vault.save(subject1);
 
-    User user2 = new User("user2");
-    user2.addAttribute(attributeDef1.getName(), "common first name");
-    user2.addAttribute(attributeDef2.getName(), "user2's last name");
-    vault.save(user2);
+    DataSubject subject2 = new DataSubject("subject2");
+    subject2.addAttribute(attributeDef1.getName(), "common first name");
+    subject2.addAttribute(attributeDef2.getName(), "subject2's last name");
+    vault.save(subject2);
 
     try {
       SearchRequest searchRequest = new SearchRequest();
@@ -97,12 +97,12 @@ public class ViziVaultIntegrationTest {
 
       List<Attribute> results = vault.search(searchRequest, 0, 10);
       assertEquals(3, results.size());
-      assertTrue(results.stream().anyMatch(result -> result.getAttribute().equals(attributeDef1.getName()) && result.getUserId().equals(user1.getId())));
-      assertTrue(results.stream().anyMatch(result -> result.getAttribute().equals(attributeDef1.getName()) && result.getUserId().equals(user2.getId())));
-      assertTrue(results.stream().anyMatch(result -> result.getAttribute().equals(attributeDef2.getName()) && result.getUserId().equals(user2.getId())));
+      assertTrue(results.stream().anyMatch(result -> result.getAttribute().equals(attributeDef1.getName()) && result.getSubjectId().equals(subject1.getId())));
+      assertTrue(results.stream().anyMatch(result -> result.getAttribute().equals(attributeDef1.getName()) && result.getSubjectId().equals(subject2.getId())));
+      assertTrue(results.stream().anyMatch(result -> result.getAttribute().equals(attributeDef2.getName()) && result.getSubjectId().equals(subject2.getId())));
     } finally {
-      vault.purge(user1.getId());
-      vault.purge(user2.getId());
+      vault.purge(subject1.getId());
+      vault.purge(subject2.getId());
     }
   }
 
@@ -113,12 +113,12 @@ public class ViziVaultIntegrationTest {
     AttributeDefinition attributeDef = new AttributeDefinition("TestAttribute1");
     vault.storeAttributeDefinition(attributeDef);
 
-    User sentUser = new User("exampleUser");
-    sentUser.addAttribute(attributeDef.getName(), "some data");
-    vault.save(sentUser);
+    DataSubject sentSubject = new DataSubject("exampleUser");
+    sentSubject.addAttribute(attributeDef.getName(), "some data");
+    vault.save(sentSubject);
 
-    User receivedUser = vault.findByUser(sentUser.getId());
-    assertEquals(receivedUser.getAttribute(attributeDef.getName()), vault.getDataPoint(receivedUser.getAttribute(attributeDef.getName()).getDataPointId()));
+    DataSubject receivedSubject = vault.findByDataSubject(sentSubject.getId());
+    assertEquals(receivedSubject.getAttribute(attributeDef.getName()), vault.getDataPoint(receivedSubject.getAttribute(attributeDef.getName()).getDataPointId()));
   }
 
   @Test
@@ -129,18 +129,18 @@ public class ViziVaultIntegrationTest {
     attributeDef1.setTags(List.of("tag1"));
     vault.storeAttributeDefinition(attributeDef1);
 
-    User sentUser = new User("exampleUser");
-    sentUser.setTags(List.of("tag2"));
+    DataSubject sentSubject = new DataSubject("exampleUser");
+    sentSubject.setTags(List.of("tag2"));
 
     Attribute attribute1 = new Attribute(attributeDef1.getName());
     attribute1.setValue("exampleUser's first name");
     attribute1.setTags(List.of("tag3"));
-    sentUser.addAttribute(attribute1);
+    sentSubject.addAttribute(attribute1);
 
     try {
-      vault.save(sentUser);
+      vault.save(sentSubject);
 
-      Attribute receivedAttribute = vault.findByUser("exampleUser").getAttribute(attributeDef1.getName());
+      Attribute receivedAttribute = vault.findByDataSubject("exampleUser").getAttribute(attributeDef1.getName());
       assertEquals(3, receivedAttribute.getTags().size());
       assertTrue(receivedAttribute.getTags().stream().anyMatch(tag -> tag.equals("tag1")));
       assertTrue(receivedAttribute.getTags().stream().anyMatch(tag -> tag.equals("tag2")));
@@ -170,7 +170,7 @@ public class ViziVaultIntegrationTest {
       assertTrue(allTags.stream().noneMatch(tag -> tag.getName().equals("tag4")));
       
     } finally {
-      vault.purge(sentUser.getId());
+      vault.purge(sentSubject.getId());
     }
 
   }
@@ -188,7 +188,7 @@ public class ViziVaultIntegrationTest {
 
     ConjunctiveConstraint rootRule = new ConjunctiveConstraint();
     rootRule.addRule(new AttributeConstraint(List.of(attributeDef.getName()), AttributeListOperator.ANY));
-    rootRule.addRule(new UserConstraint(attributeDef.getName(), UserValuePredicate.EQUALS, "Test Attribute Value"));
+    rootRule.addRule(new SubjectValueConstraint(attributeDef.getName(), SubjectValuePredicate.EQUALS, "Test Attribute Value"));
 
     Rule rule = new Rule();
     rule.setConstraint(rootRule);

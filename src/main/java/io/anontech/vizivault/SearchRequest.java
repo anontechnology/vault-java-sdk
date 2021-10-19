@@ -23,7 +23,7 @@ public class SearchRequest {
 
   private String sensitivity;
 
-  private String userId;
+  private String subjectId;
 
   private String country;
   private String subdivision;
