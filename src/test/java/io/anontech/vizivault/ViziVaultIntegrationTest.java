@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import io.anontech.vizivault.rules.*;
 import io.anontech.vizivault.rules.AttributeConstraint.AttributeListOperator;
-import io.anontech.vizivault.rules.SubjectValueConstraint.SubjectValuePredicate;
+import io.anontech.vizivault.rules.ValueConstraint.ValuePredicate;
 
 public class ViziVaultIntegrationTest {
 
@@ -194,7 +194,7 @@ public class ViziVaultIntegrationTest {
 
     ConjunctiveConstraint rootRule = new ConjunctiveConstraint();
     rootRule.addRule(new AttributeConstraint(List.of(attributeDef.getName()), AttributeListOperator.ANY));
-    rootRule.addRule(new SubjectValueConstraint(attributeDef.getName(), SubjectValuePredicate.EQUALS, "Test Attribute Value"));
+    rootRule.addRule(new ValueConstraint(attributeDef.getName(), ValuePredicate.EQUALS, "Test Attribute Value"));
 
     Rule rule = new Rule();
     rule.setConstraint(rootRule);

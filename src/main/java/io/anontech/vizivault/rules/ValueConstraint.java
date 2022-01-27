@@ -7,20 +7,20 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=true)
-public class SubjectValueConstraint extends RuleConstraint {
-  public static enum SubjectValuePredicate {
+public class ValueConstraint extends RuleConstraint {
+  public static enum ValuePredicate {
     @SerializedName("eq")
     EQUALS,
-    
+
     @SerializedName("neq")
     NOT_EQUALS,
-    
+
     @SerializedName("lt")
     LESS_THAN,
-    
+
     @SerializedName("gt")
     GREATER_THAN,
-    
+
     @SerializedName("leq")
     LESS_OR_EQUAL,
 
@@ -31,14 +31,23 @@ public class SubjectValueConstraint extends RuleConstraint {
     BEFORE,
 
     @SerializedName("after")
-    AFTER;
+    AFTER,
+
+    @SerializedName("in")
+    IN,
+
+    @SerializedName("nin")
+    NOT_IN,
+
+    @SerializedName("regex")
+    REGEX_CONTAINS
   }
 
-  public SubjectValueConstraint(){
+  public ValueConstraint(){
     super("user");
   }
 
-  public SubjectValueConstraint(String attribute, SubjectValuePredicate predicate, String value) {
+  public ValueConstraint(String attribute, ValuePredicate predicate, String value) {
     super("user");
     this.attribute = attribute;
     this.value = value;
@@ -47,5 +56,5 @@ public class SubjectValueConstraint extends RuleConstraint {
 
   private String attribute;
   private String value;
-  private SubjectValuePredicate predicate;
+  private ValuePredicate predicate;
 }
