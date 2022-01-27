@@ -32,6 +32,10 @@ class RuleConstraintDeserializer implements JsonDeserializer<RuleConstraint>, Js
         return context.deserialize(json, RegulationConstraint.class);
       case "geo":
         return context.deserialize(json, GeolocationConstraint.class);
+      case "sentiment":
+        return context.deserialize(json, ValueSentimentConstraint.class);
+      case "entityType":
+        return context.deserialize(json, EntityTypeConstraint.class);
       default:
         throw new JsonParseException(String.format("Unknown rule constraint type %s", ruleType));
     }
