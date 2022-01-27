@@ -1,6 +1,7 @@
 package io.anontech.vizivault;
 
 import java.lang.reflect.Type;
+import java.util.Map;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -13,31 +14,26 @@ import io.anontech.vizivault.rules.*;
 
 class RuleConstraintDeserializer implements JsonDeserializer<RuleConstraint>, JsonSerializer<RuleConstraint> {
 
+  private static final Map<String, Class<? extends RuleConstraint>> classes = Map.of(
+    "all", ConjunctiveConstraint.class,
+    "any", DisjunctiveConstraint.class,
+    "tag", TagConstraint.class,
+    "attribute", AttributeConstraint.class,
+    "value", ValueConstraint.class,
+    "regulation", RegulationConstraint.class,
+    "geo", GeolocationConstraint.class,
+    "sentiment", ValueSentimentConstraint.class,
+    "entityType", EntityTypeConstraint.class
+  );
+
   @Override
   public RuleConstraint deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
     String ruleType = json.getAsJsonObject().get("type").getAsString();
-
-    switch (ruleType) {
-      case "all":
-        return context.deserialize(json, ConjunctiveConstraint.class);
-      case "any":
-        return context.deserialize(json, DisjunctiveConstraint.class);
-      case "tag":
-        return context.deserialize(json, TagConstraint.class);
-      case "attribute":
-        return context.deserialize(json, AttributeConstraint.class);
-      case "value":
-        return context.deserialize(json, ValueConstraint.class);
-      case "regulation":
-        return context.deserialize(json, RegulationConstraint.class);
-      case "geo":
-        return context.deserialize(json, GeolocationConstraint.class);
-      case "sentiment":
-        return context.deserialize(json, ValueSentimentConstraint.class);
-      case "entityType":
-        return context.deserialize(json, EntityTypeConstraint.class);
-      default:
-        throw new JsonParseException(String.format("Unknown rule constraint type %s", ruleType));
+    Class<? extends RuleConstraint> constraintClass = classes.get(ruleType);
+    if (constraintClass == null) {
+      throw new JsonParseException(String.format("Unknown rule constraint type %s", ruleType));
+    } else {
+     return context.deserialize(json, constraintClass);
     }
   }
 
